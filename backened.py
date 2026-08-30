@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph,START,END
-from typing import  TypedDict,Annotated,Literal,NotRequired
+from typing import  TypedDict,Annotated,Literal,NotRequired,Any,Dict,Optional
 from langchain_core.messages import BaseMessage,HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
@@ -16,6 +16,7 @@ import asyncio
 import requests
 import threading
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from rag import search_uploaded_documents
 load_dotenv()
 _ASYNC_LOOP=asyncio.new_event_loop()
 _ASYNC_THREAD=threading.Thread(target=_ASYNC_LOOP.run_forever,daemon=True)
@@ -151,7 +152,7 @@ def load_mcp_tools()->list[BaseTool]:
         print("MCP TOOL ERROR",repr(e))
         return[]
 mcp_tools=load_mcp_tools()
-tools=[search_tool,calculator,weather_tool,stock_tool,*mcp_tools]
+tools=[search_tool,calculator,weather_tool,stock_tool,search_uploaded_documents,*mcp_tools]
 model_with_tools=model.bind_tools(tools=tools)
 class ChatState(TypedDict):
     messages:Annotated[list[BaseMessage],add_messages]

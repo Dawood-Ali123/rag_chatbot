@@ -3,7 +3,9 @@ from backened import chat_bot,reterive_all_threads,submit_async_task,_run_async
 from langchain_core.messages import HumanMessage,AIMessageChunk
 import uuid
 import queue
-
+import os
+import tempfile
+from rag  import add_pdf
 def generate_thread_id():
     return str(uuid.uuid4())
 def reset_chat():
@@ -48,6 +50,29 @@ add_thread(st.session_state["thread_id"])
 st.sidebar.title("LangGraph Chatbot")
 if st.sidebar.button("New Chat"):
     reset_chat()
+st.sidebar.title("Documents")
+uploaded_file=st.sidebar.file_uploader(
+    "Upload PDF",
+    type=['pdf']
+)
+if uploaded_file:
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".pdf"
+    )as temp_file:
+        tempfile.write(
+            uploaded_file.getbuffer()
+        )
+        temp_path=temp_file.name
+    try:
+        chunks=add_pdf(
+            temp_path,
+            uploaded_file.name
+        )
+        st.sidebar.success(f"{uploaded_file.name} uploaded")
+        st.sidebar.info(f"{chunks} chunks added")
+    finally:
+        os.remove(temp_path)
 st.sidebar.title("My Conversations")
 for thread_id in st.session_state["chat_threads"][::-1]:
     title = _run_async(load_title(thread_id))
