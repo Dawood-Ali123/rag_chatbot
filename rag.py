@@ -1,11 +1,13 @@
 from langchain_chroma import Chroma
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.tools import tool
+from dotenv import load_dotenv
+load_dotenv()
 #embedding model
-embeddings=GoogleGenerativeAIEmbeddings(
-    model='models/gemini-embedding-001'
+embeddings=HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 vectorstore=Chroma(
     collection_name="chatbot_documents",
