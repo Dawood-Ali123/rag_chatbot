@@ -47,4 +47,4 @@ Source:{doc.metadata.get('source','unknown')}
 content:{doc.page_content}
 """
         )
-        return "\n\n---\n\n.join(results)"
+        return "\n\n---\n\n".join(results)

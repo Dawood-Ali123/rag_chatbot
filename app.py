@@ -60,7 +60,7 @@ if uploaded_file:
         delete=False,
         suffix=".pdf"
     )as temp_file:
-        tempfile.write(
+        temp_file.write(
             uploaded_file.getbuffer()
         )
         temp_path=temp_file.name
